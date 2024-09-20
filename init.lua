@@ -191,6 +191,7 @@ vim.keymap.set('n', '<C-l>', '<C-w><C-l>', { desc = 'Move focus to the right win
 vim.keymap.set('n', '<C-j>', '<C-w><C-j>', { desc = 'Move focus to the lower window' })
 vim.keymap.set('n', '<C-k>', '<C-w><C-k>', { desc = 'Move focus to the upper window' })
 vim.api.nvim_set_keymap('n', '<leader>rc', ':e $MYVIMRC<CR>', { noremap = true, silent = true })
+vim.api.nvim_set_keymap('n', '<leader>wa', ':wa<CR>', { noremap = true, silent = true })
 
 local map = vim.api.nvim_set_keymap
 local opts = { noremap = true, silent = true }
@@ -504,6 +505,7 @@ require('lazy').setup({
       end, { desc = '[S]earch [N]eovim files' })
     end,
   },
+  { 'wakatime/vim-wakatime', lazy = false },
 
   -- LSP Plugins
   {
@@ -732,7 +734,13 @@ require('lazy').setup({
       }
     end,
   },
-
+  {
+    'github/copilot.vim',
+    event = 'InsertEnter',
+    config = function()
+      -- Configuration optionnelle pour GitHub Copilot
+    end,
+  },
   { -- Autoformat
     'stevearc/conform.nvim',
     event = { 'BufWritePre' },
