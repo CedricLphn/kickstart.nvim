@@ -254,6 +254,33 @@ vim.api.nvim_create_autocmd('TextYankPost', {
   end,
 })
 
+vim.api.nvim_create_autocmd('FileType', {
+  pattern = { 'typescript', 'html', 'scss' },
+  callback = function()
+    vim.opt_local.shiftwidth = 4
+    vim.opt_local.tabstop = 4
+    vim.opt_local.softtabstop = 0
+    vim.opt_local.expandtab = true
+    vim.opt_local.autoindent = true
+  end,
+})
+
+-- Indentation automatique lors de la sauvegarde sans déplacer le curseur
+vim.api.nvim_create_autocmd('BufWritePre', {
+  pattern = { '*.ts', '*.html', '*.scss' },
+  callback = function()
+    -- Sauvegarde la position actuelle du curseur
+    local cursor_pos = vim.api.nvim_win_get_cursor(0)
+
+    -- Reformate tout le fichier
+    vim.cmd [[silent! normal! gg=G]]
+
+    -- Restaure la position du curseur
+    vim.api.nvim_win_set_cursor(0, cursor_pos)
+  end,
+})
+
+
 -- [[ Install `lazy.nvim` plugin manager ]]
 --    See `:help lazy.nvim.txt` or https://github.com/folke/lazy.nvim for more info
 local lazypath = vim.fn.stdpath 'data' .. '/lazy/lazy.nvim'
@@ -561,16 +588,16 @@ require('lazy').setup({
       --
       -- If you're wondering about lsp vs treesitter, you can check out the wonderfully
       -- and elegantly composed help section, `:help lsp-vs-treesitter`
-vim.api.nvim_create_autocmd("FileType", {
-  pattern = "*",
-  callback = function()
-    vim.opt_local.shiftwidth = 4
-    vim.opt_local.tabstop = 4
-    vim.opt_local.softtabstop = 0
-    vim.opt_local.expandtab = true
-    vim.opt_local.autoindent = true
-  end,
-})
+      vim.api.nvim_create_autocmd('FileType', {
+        pattern = '*',
+        callback = function()
+          vim.opt_local.shiftwidth = 4
+          vim.opt_local.tabstop = 4
+          vim.opt_local.softtabstop = 0
+          vim.opt_local.expandtab = true
+          vim.opt_local.autoindent = true
+        end,
+      })
       --  This function gets run when an LSP attaches to a particular buffer.
       --    That is to say, every time a new file is opened that is associated with
       --    an lsp (for example, opening `main.rs` is associated with `rust_analyzer`) this
